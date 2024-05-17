@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+    <!-- Generated automatically by AFRAME Exporter for Blender - https://silverslade.itch.io/a-frame-blender-exporter -->
+    <!-- MIT License: https://github.com/silverslade/aframe_blender_exporter/blob/master/LICENSE -->
+    <head>
+        <title>WebXR Application</title>
+        <link rel="icon" type="image/png" href="favicon.ico"/>
+        <meta name="description" content="3D Application">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+        <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+        <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
+         <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+         <script src="https://cdn.rawgit.com/ngokevin/kframe/e48f8cdb/components/template/dist/aframe-template-component.js"></script>         
+         <script src="//supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
+         <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effekseer-build/effekseer.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js/dist/zip.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@fern-solutions/aframe-effekseer/dist/aframe-effekseer.umd.min.js"></script>
+         <script src="https://cdn.rawgit.com/ngokevin/kframe/e48f8cdb/components/template/dist/aframe-template-component.js"></script> 
+         <script src="https://raw.githack.com/thedart76/aframe-blink-teleportation/master/js/aframe-blink-teleportation-min.js"></script>      
+         
+        <script type="text/javascript" src="js/webxr.js"></script>
+        <script type="text/javascript" src="js/joystick.js"></script>
+        <script type="text/javascript" src="js/camera-cube-env.js"></script>
+        <script type="text/javasscript" src="js/aframe-blink-teleportation.js"></script>
+        <script>
+        AFRAME.registerComponent("material-values", {
+            multiple: true,
+            schema: {
+              materialName: { type: "string", default: "" },
+              color: { type: "color", default: "" },
+              map: { type: "string", default: "" },
+              metalness: { type: "number", default: -1, min: 0, max: 1 },
+              roughness: { type: "number", default: -1, min: 0, max: 1 },
+              opacity: { type: "number", default: 1, min: 0, max: 1 }
+            },
+          
+            events: {
+              "model-loaded": function () {
+                this.update();
+              },
+            },
+          
+            init() {
+              this.rendererSystem = this.el.sceneEl.systems.renderer;
+            },
+          
+            update: function () {
+              const mesh = this.el.getObject3D("mesh");
+              if (!mesh) return;
+          
+              const materialName = this.data.materialName;
+              const color = this.data.color;
+              const map = this.data.map;
+              const metalness = this.data.metalness;
+              const roughness = this.data.roughness;
+              const opacity = this.data.opacity;
+              mesh.traverse((node) => {
+                if (node.material && node.material.name === materialName) {
+                  if (color !== "") {
+                    node.material.color.set(color);
+                    // The following line calls node.material.color.convertSRGBToLinear() when <a-scene renderer="colorManagement:true">
+                    this.rendererSystem.applyColorCorrection(node.material.color);
+                  } else {
+                    this.data.color = "#" + node.material.color.getHexString();
+                  }
+          
+                  if (metalness !== -1) {
+                    node.material.metalness = metalness;
+                  } else {
+                    this.data.metalness = node.material.metalness;
+                  }
+          
+                  if (roughness !== -1) {
+                    node.material.roughness = roughness;
+                  } else {
+                    this.data.roughness = node.material.roughness;
+                  }
+          
+                  if (map) {
+                    const imageSrc = map;
+                    const loader = new THREE.TextureLoader();
+                    loader.load(
+                      imageSrc,
+                      function (texture) {
+                        if (node.material.map) {
+                          texture.encoding = node.material.map.encoding;
+                          texture.flipY = node.material.map.flipY;
+                          texture.offset.copy(node.material.map.offset);
+                          texture.repeat.copy(node.material.map.repeat);
+                          texture.wrapS = node.material.map.wrapS;
+                          texture.wrapT = node.material.map.wrapT;
+                          node.material.map.dispose();
+                        }
+                        node.material.map = texture;
+                        texture.needsUpdate = true;
+                        node.material.needsUpdate = true;
+                      },
+                      undefined,
+                      function () {
+                        console.error(`Error loading ${imageSrc}`);
+                      }
+                    );
+                  }
+                  node.material.opacity = opacity;
+                  node.material.transparent = opacity < 1;
+                  node.material.needsUpdate = true;
+                }
+              });
+            },
+          });
+
+              
+
+        </script>
+        
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body onload="init();">
+        <a-scene   shadow="type: pcfsoft; autoUpdate: true;" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150" effekseer="wasmPath: https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effekseer-build/effekseer.wasm" webxr="requiredFeatures: hit-test,local-floor">
+            <!-- Assets -->
+            <a-assets>
+				<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
+				<a-asset-item id="Cube" src="./assets/Cube.gltf"></a-asset-item>
+				<a-asset-item id="Object" src="./assets/Object.gltf"></a-asset-item>
+				<a-asset-item id="Plane" src="./assets/Plane.gltf"></a-asset-item>
+				<a-asset-item id="TorusKnot" src="./assets/TorusKnot.gltf"></a-asset-item>
+            <a-asset-item id="bola" src="./assets/ATest.glb"></a-asset-item>
+        <a-asset-item id="txtNudo" src="./assets/Txt_Nudo_toral.glb"></a-asset-item>
+        <a-asset-item id="txtObject" src="./assets/Txt_Suzanne.glb"></a-asset-item>
+        <a-asset-item id="panelcontvest" src="./assets/Panel_contenedor_vestuario.glb"></a-asset-item>
+                <a-asset-item id="PanelBase" src="./assets/Panel_contenedor_base.glb"></a-asset-item>
+                <a-asset-item id="Panelbtn_escena_1" src="./assets/Panel_boton_escena_01.glb"></a-asset-item>
+                <a-asset-item id="Panelbtn_escena_2" src="./assets/Panel_boton_escena_02.glb"></a-asset-item>
+                <a-asset-item id="Panelbtn_escena_3" src="./assets/Panel_boton_escena_03.glb"></a-asset-item>
+                <a-asset-item id="Panelbtn_escena_4" src="./assets/Panel_boton_escena_04.glb"></a-asset-item>
+                <a-asset-item id="Panelbtn_escena_5" src="./assets/Panel_boton_escena_05.glb"></a-asset-item>
+                <img id="sky"              src="./resources/sky.jpg">
+                <img id="camiseta_azul"    src="./assets/vestuario/camiseta_azul.png">
+                <img id="camiseta_roja"    src="./assets/vestuario/camiseta_roja.png">
+                <img id="jersey_azul"      src="./assets/vestuario/Jersey-azul.png">
+                <img id="polo_verde_limon" src="./assets/vestuario/polo_verde_limon.png">
+                <img id="polo_verde"       src="./assets/vestuario/polo_verde.png">
+                <img id="vacio"            src="./assets/vestuario/vacio_transparente.png">
+                <img id="textocalig"       src="./media/texto_Lorem_Ipsum_caligr.png">
+                <img id="play_ico"         src="./media/play_icon.png">
+                <img id="pause_ico"        src="./media/pause_icon.png">
+                <img id="stop_ico"       src="./media/stop_icon.png">
+                <img id="play_over"       src="./media/play_over.png">
+                <img id="pause_over"       src="./media/pause_over.png">
+                <img id="stop_over"       src="./media/stop_over.png">
+                <img id="panel_1"       src="./media/Panel_1_cont.png">
+                <img id="panel_2"       src="./media/Panel_2_cont.png">
+                <video id="espacio" src="./media/Cabecera_JM.mp4" loop ></video>
+                <a-asset-item id="start-effect" src="./media/estrellas.efkpkg" response-type="arraybuffer"></a-asset-item>
+                <a-asset-item id="fuegosartificiales" src="./media/fuegosartificiales.efkpkg" response-type="arraybuffer"></a-asset-item>
+                <a-asset-item id="formascolores" src="./media/formascolores.efkpkg" response-type="arraybuffer"></a-asset-item>
+                
+            </a-assets>
+
+            <!-- Elementos en escena -->
+            
+			<a-entity id="muroentorno" class="no-clickable" gltf-model="#BezierCurve" scale="1 1 1" position="0 0 0" visible="true" shadow="cast: true" material-values="materialName: Material; color: red" ></a-entity>
+			<a-entity id="Caja" class="clickable" gltf-model="#Cube" scale="0.8 0.8 0.8" position="-3.9697768688201904 1.1697001457214355 -17.826059341430664" visible="true" shadow="cast: true" 
+                                animation="property: rotation; resumeEvents: fusing; pauseEvents: mouseleave; from: 0 0 0; to: 0 -360 0; dur: 20000; dir: normal; loop: true; easing: linear"></a-entity>
+			<a-entity id="Mona" gltf-model="#Object" scale="1 1 1" position="1 0.8 -9.6" visible="true" shadow="cast: true"  animation__rot= "property: rotation; from: 0 0 0; to: 0 360 0; dur: 20000; dir: normal; loop: true;  easing: linear " animation__pos="property: position; from: 1 0.95 -9.6; to: 1 0.78 -9.6; dur: 5000; loop: true; dir: alternate; easing: easeInOutQuad;"></a-entity>
+			<a-entity id="Suelo" gltf-model="#Plane" scale="1 1 1" position="0.0 0.0 -12.0" visible="true" shadow="cast: true" material-values="materialName: mat_suelo; color:#65646E" ground></a-entity>
+			<a-entity id="TorusKnot1" gltf-model="#TorusKnot" scale="0.8 0.8 0.8" position="-1 1.0063267946243286 -12.671764373779297" visible="true" shadow="cast: true"  animation= "property: rotation; from: 0 0 0; to: 0 -360 0; dur: 15000; loop: true; dir: normal; easing: linear" ></a-entity>
+         <a-entity id="esfera" gltf-model="#bola" position="-2 0 -8" scale="0.5 0.5 0.5" animation-mixer="clip: *" shadow="cast: true" material-values__mat="materialName:material"></a-entity>   
+         
+         <a-entity id="grupo_panel_pos"
+                       position="-2.2 0 0">                      
+              <a-entity id="Panel_Base" gltf-model="#PanelBase" position="0 0 0" shadow="cast: true"></a-entity>
+              <a-entity id="Panel_btn_escena_1" class="clickable" gltf-model="#Panelbtn_escena_1" material-values="materialName: mat_selector_001; opacity: 1" position="0 0 0" shadow="cast: false" event-set__btn1scale="_event: fusing; scale: 1.005 1.005 1;" event-set__btn1scaleout="_event: mouseleave; scale: 1 1 1" proxy-event="event: fusing; to: #text; as: click"></a-entity>
+              <a-entity id="Panel_btn_escena_2" class="clickable" gltf-model="#Panelbtn_escena_2" position="0 0 0" shadow="cast: false" event-set__btn2scale="_event: fusing; scale: 1.005 1.005 1;" event-set__btn2scaleout="_event: mouseleave; scale: 1 1 1" proxy-event="event: fusing; to: #text; as: click2" proxy-event__visible="event: fusing; to: #text2; as: visible"></a-entity>
+              <a-entity id="Panel_btn_escena_3" class="clickable" gltf-model="#Panelbtn_escena_3" position="0 0 0" shadow="cast: false" event-set__btn3scale="_event: fusing; scale: 1.005 1.005 1;" event-set__btn3scaleout="_event: mouseleave; scale: 1 1 1" proxy-event="event: fusing; to: #text; as: click3" proxy-event__invisible="event: fusing; to: #text2; as: invisible"></a-entity>
+              <a-entity id="Panel_btn_escena_4" class="clickable" gltf-model="#Panelbtn_escena_4" position="0 0 0" shadow="cast: false" event-set__btn4scale="_event: fusing; scale: 1.005 1.005 1;" event-set__btn4scaleout="_event: mouseleave; scale: 1 1 1"></a-entity>
+              <a-entity id="Panel_btn_escena_5" class="clickable" gltf-model="#Panelbtn_escena_5" position="0 0 0" shadow="cast: false" event-set__btn5scale="_event: fusing; scale: 1.005 1.005 1;" event-set__btn5scaleout="_event: mouseleave; scale: 1 1 1"></a-entity>          
+        </a-entity>
+
+        <a-entity id="textocaligrafico" geometry="primitive: plane; width: 4; height: 4" material="shader: flat; src: #textocalig; side: double; transparent: true; opacity: 0.3; depthTest: false" position="0 0.5 -5.762" rotation="-90 0 0"></a-entity>
+        <a-entity id="Panel_vestuario" gltf-model="#panelcontvest" position="-2.2 0 0" shadow="cast: true" material-values__vestuario="materialName:matvestuario; map: ./assets/vestuario/vacio_transparente.png; opacity: 0.99"></a-entity>
+        <a-entity id="videoespacio" geometry="primitive: plane; width: 1; height: 0.6" position="-7.39049 1.15559 -9.20591"  rotation="0 45 0" scale="2 1.8 1" material="shader: flat; src: #espacio"></a-entity> 
+        <a-entity id="txtNudotoral" gltf-model="#txtNudo" position="-1.5 0 0" visible="false"></a-entity>
+
+        <a-entity id="txtSuzanne" gltf-model="#txtObject" position="-1 0" visible="false"></a-entity>
+        <a-entity id="text" 
+                  class="clickable" 
+                  text="value: 'Texto se anima con evento interactivo'; height: 0.8; width: 3; color: #dde00b; letterSpacing: 0; wrapCount: 60; anchor: center" 
+                  position="-3 2.2 -9.9" 
+                  shadow="cast: true"
+                  animation__letterSpacing="property: text.letterSpacing; to: 15; dur: 8000; loop: true; dir: alternate; easing: easeInOutQuad;  startEvents: click; resumeEvents: stop; pauseEvents: pause"
+                  animation__colormix1="property: text.color; from: #dde00b; to: #ffffff; dur: 1000; dir: normal; startEvents: click2"
+                  animation__colormix2="property: text.color; from: #ffffff; to: #86f0c2; dur: 1000; dir: normal; startEvents: click3"></a-entity>            
+         <a-entity id="text2" position="-0.4 2.2 -9.988"
+                  text="value: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Pellentesque condimentum felis a sem. Quisque dictum quam vel neque. Nulla sagittis condimentum ligula. Nam id neque. Sed dolor. Vivamus quis mi. Vestibulum non arcu a ante feugiat vestibulum. Nam laoreet dui sed magna. Nunc in turpis ac lacus eleifend sagittis.; width: 1.5; color: #e1e4f0; anchor: left; lineHeight: 80" visible="false"
+                  animation__visiblein="property: visible; to: true; dur: 1; startEvents: visible" animation__visibleout="property: visible; to: false; startEvents: invisible"></a-entity>
+
+         <a-entity id="panel_info"  position="4 1.28 -4" rotation="0 -90 0" material="shader: flat; transparent: true" template="src: panel_1.html"></a-entity>
+                  
+         <!--botones interface videoespacio --> 
+
+         <a-entity id="grupo_iconos" class="clickable" layout="type: line; margin: 0.3" position="-7.55054 0.3292 -8.96406" rotation="0 45 0">
+            <a-image id="icon_play" class="clickable" src="#play_ico" position="-0.05 0 0" width="0.2" height="0.2" event-set__playover="_event: fusing; src: #play_over" event-set__playout="_event: mouseleave; src: #play_ico"></a-image>
+            <a-image id="icon_pause" class="clickable" src="#pause_ico" position="0.05 0 0" width="0.2" height="0.2" event-set__playover="_event: fusing; src: #pause_over" event-set__playout="_event: mouseleave; src: #pause_ico"></a-image>
+            <a-image id="icon_stop" class="clickable" src="#stop_ico" position="0 0 0" width="0.2" height="0.2" event-set__playover="_event: fusing; src: #stop_over" event-set__playout="_event: mouseleave; src: #stop_ico"></a-image>
+            
+         </a-entity>
+
+         <a-entity id="particulas" effekseer="src: #start-effect; dynamic: true; loop: true" position="4.58225 1 -8.13232" scale="0.4 0.4 0.4"></a-entity>
+         <a-entity id="fuegosart" effekseer="src: #fuegosartificiales; dynamic: true; loop: true" position="0.S 1 -18"></a-entity>
+         <a-entity id="formascol" effekseer="src: #formascolores; dynamic: true; loop: true" position="-8.73585 0.2 -7.52336" scale="0.2 0.2 0.2" ></a-entity>
+         
+
+         <!--localizadores teletransporte-->
+
+         <a-cylinder
+        class="clickable"
+       
+        radius="0.3"
+        height="0.01"
+        position="0 0.02 -7.650"
+        material="shader: flat; color: #e7e6ea; opacity:0.2"
+        blink-teleportation="pos: 0 0.02 -7.650"
+        
+      ></a-cylinder>
+      <a-cylinder
+        class="clickable"
+        
+        radius="0.3"
+        height="0.01"
+        position="1.10 0.25 -3.892"
+        material="shader: flat; color: #e7e6ea; opacity:0.2"
+        blink-teleportation="pos: 1.10 0.25 -3.892"
+        
+      ></a-cylinder>
+      <a-cylinder
+        class="clickable"
+        
+        radius="0.3"
+        height="0.01"
+        position="-1.270 0.02 0"       
+        material="shader: flat; color: #e7e6ea; opacity:0.2"
+        blink-teleportation="pos: -1.270 0.02 0"
+        
+      ></a-cylinder>
+      <a-cylinder
+        class="clickable"
+        
+        radius="0.3"
+        height="0.01"
+        position="-4.98 0.02 -5.887"       
+        material="shader: flat; color: #e7e6ea; opacity:0.2"
+        blink-teleportation="pos: -4.98 0.02 -5.887"
+        
+      ></a-cylinder>
+      <a-cylinder
+        class="clickable"
+        
+        radius="0.3"
+        height="0.01"
+        position="3.06 0.02 -14.245"        
+        material="shader: flat; color: #e7e6ea; opacity:0.2"
+        blink-teleportation="pos: 3.06 0.02 -14.245"
+        
+      ></a-cylinder>
+      <a-cylinder
+         class="clickable"
+         
+         radius="0.3"
+         height="0.01"
+         position="-7.410 0.02 -12.925"         
+         material="shader: flat; color: #e7e6ea; opacity:0.2"
+         blink-teleportation="pos: -7.410 0.02 -12.925"
+      
+    ></a-cylinder>
+
+            <!-- Cámara cursor -->
+
+            <a-entity id="camRig" 
+                position="-1.5 -0.2 -2" 
+                movement-controls="controls: checkpoint"
+                checkpoint-controls="mode: teleport"
+                wasd-controls="acceleration:10">
+                <a-entity id="cam" 
+                    camera="fov:40; near: 0.001" 
+                    position="0 1.7000000476837158 0" 
+                    look-controls="pointerLockEnabled: true"
+                    wasd-controls-enabled="false">
+                        <a-entity id="cursor" class="clickable" cursor="fuse: true; fuseTimeout: 100; rayOrigin: entity"  
+                            position="0 0 -1"
+                            geometry="primitive: circle; radius: 0.004;"
+                            material="color: #CCC; shader: flat; opacity: 0.7"
+                            raycaster = "objects: .clickable; far: 15">
+                        </a-entity>                        
+                </a-entity>
+                    
+            </a-entity>
+
+            <!-- Luces / iluminación -->
+            
+			<a-entity id="direction" position="4.076245307922363 5.903861999511719 -1.0054539442062378" light="castShadow:true; color:#ffffff; distance:40.0; type:directional; intensity:1.2; shadowBias: -0.001; shadowCameraFar: 501.02; shadowCameraBottom: 12; shadowCameraFov: 101.79; shadowCameraNear: 0; shadowCameraTop: -5; shadowCameraRight: 10; shadowCameraLeft: -10; shadowRadius: 2; target: #TorusKnot1"></a-entity>
+			<a-entity position="-7.068422317504883 3.9569075107574463 -7.727793216705322" light="castShadow:true; color:#ffffff; distance:40.0; type:point; intensity:0.6; shadowBias: -0.001; shadowCameraFar: 501.02; shadowCameraBottom: 12; shadowCameraFov: 101.79; shadowCameraNear: 0; shadowCameraTop: -5; shadowCameraRight: 10; shadowCameraLeft: -10; shadowRadius: 2;"></a-entity>
+         <a-entity id="luz_focal_1" light="type: spot; angle: 10; color: #f1d698; decay: -0.1; intensity: 1; penumbra: 0.32; target: #Mona" position="0 5 -4.4" visible="false"></a-entity>
+         <a-entity id="luz_focal_2" light="type: spot; angle: 12; color: #0ad3f2; decay: -0.1; intensity: 1.5; penumbra: 0.32; target: #TorusKnot1" position="0 5 -9.4" visible="false"></a-entity>
+            <!-- Sky -->
+            <a-sky src="#sky" material="" geometry="" rotation="0 90 0"></a-sky>
+        </a-scene>
+
+         <!--Código programación-->
+
+        <script>
+            const espaciovideo = document.querySelector("#espacio");
+            const panel_btn_escena_1 = document.querySelector("#Panel_btn_escena_1");
+            const panel_btn_escena_2 = document.querySelector("#Panel_btn_escena_2");
+            const panel_btn_escena_3 = document.querySelector("#Panel_btn_escena_3");
+            const panel_btn_escena_4 = document.querySelector("#Panel_btn_escena_4");
+            const panel_btn_escena_5 = document.querySelector("#Panel_btn_escena_5");
+            
+
+            const TorusKnot = document.querySelector("#TorusKnot1");
+            const muroentorno = document.querySelector("#muroentorno");
+            const caja = document.querySelector("#Caja");
+            const mona = document.querySelector("#Mona");
+            const suelo = document.querySelector("#Suelo");
+
+            const esfera = document.querySelector("#esfera");
+
+            const panelvestuario = document.querySelector("#Panel_vestuario");
+
+            const txtNudo = document.querySelector("#txtNudotoral");
+            const txtObjeto = document.querySelector("#txtSuzanne");
+
+            const luz_focal_1 = document.querySelector("#luz_focal_1");
+            const luz_focal_2 = document.querySelector("#luz_focal_2");
+
+            const iconplay = document.querySelector("#icon_play");
+            const iconpause = document.querySelector("#icon_pause");
+            const iconstop = document.querySelector("#icon_stop");
+
+            panel_btn_escena_1.addEventListener('fusing', function () {
+                panel_btn_escena_1.setAttribute('material-values', 
+                   {materialName: 'mat_selector_001', color: '#90C7C9', opacity: 0.7} 
+                );
+                TorusKnot.setAttribute('material-values', 
+                   {materialName: 'mat_TorusKnot', color: '#E756E1'} 
+                );
+                muroentorno.setAttribute('material-values', 
+                   {materialName: 'Material', color: 'red'} 
+                );
+                txtNudo.setAttribute('visible', true);
+                txtObjeto.setAttribute('visible', false);
+                panelvestuario.setAttribute("material-values__vestuario", {
+                  materialName: "matvestuario",                  
+                  map: "./assets/vestuario/camiseta_roja.png",
+                  roughness: 1,
+                  metalness: 0,
+                  opacity: 0.99,
+               }); 
+               esfera.setAttribute("material-values__mat", {
+                  materialName: "material",
+                  color: 'rgb(126, 96, 163)',
+                  roughness: '0.3',
+                  metalness: '0.7',
+                  opacity: '1',
+               });
+               luz_focal_1.setAttribute('visible', true); 
+               luz_focal_2.setAttribute('visible', true);  
+            });
+            panel_btn_escena_1.addEventListener('mouseleave', function () {
+                panel_btn_escena_1.setAttribute('material-values', 
+                {materialName: 'mat_selector_001', color: '#608587', opacity: 0.5} 
+                )
+            });
+
+            panel_btn_escena_2.addEventListener('fusing', function () {
+                panel_btn_escena_2.setAttribute('material-values', 
+                   {materialName: 'mat_selector_001', color: '#90C7C9', opacity: 0.7} 
+                );
+                muroentorno.setAttribute('material-values', 
+                   {materialName: 'Material', color: '#0b091a'} 
+                );
+                TorusKnot.setAttribute('material-values', 
+                   {materialName: 'mat_TorusKnot', color: '#E7D685'} 
+                );
+                txtNudo.setAttribute('visible', false);
+                txtObjeto.setAttribute('visible', false); 
+                panelvestuario.setAttribute("material-values", 
+                   {materialName:"matvestuario", map:"C:\Temp\custom_property_test\assets\vestuario\camiseta_roja.png", 
+                   opacity: '0.99',
+                  });
+                  panelvestuario.setAttribute("material-values__vestuario", {
+                  materialName: "matvestuario",                  
+                  map: "./assets/vestuario/camiseta_azul.png",
+                  roughness: 1,
+                  metalness: 0,
+                  opacity: 0.99,
+               }); 
+               esfera.setAttribute("material-values__mat", {
+                  materialName: "material",
+                  color: 'rgb(98, 191, 177)',
+                  roughness: '0.6',
+                  metalness: '0.2',
+                  opacity: '1',
+               })           
+            });
+            panel_btn_escena_2.addEventListener('mouseleave', function () {
+                panel_btn_escena_2.setAttribute('material-values', 
+                {materialName: 'mat_selector_001',  color: '#608587', opacity: 0.5} 
+                )
+            });
+
+            panel_btn_escena_3.addEventListener('fusing', function () {
+                panel_btn_escena_3.setAttribute('material-values', 
+                   {materialName: 'mat_selector_001', color: '#90C7C9', opacity: 0.7} 
+                );
+                muroentorno.setAttribute('material-values', 
+                   {materialName: 'Material', color: 'purple'} 
+                );
+                
+                mona.setAttribute('material-values', 
+                   {materialName: 'mat_Suzanne', color: '#6FE700'} 
+                );
+                txtObjeto.setAttribute('visible', true);
+                txtNudo.setAttribute('visible', false);
+                panelvestuario.setAttribute("material-values__vestuario", {
+                  materialName: "matvestuario",                  
+                  map: "./assets/vestuario/polo_verde_limon.png",
+                  roughness: 1,
+                  metalness: 0,
+                  opacity: 0.99,
+               });
+               esfera.setAttribute("material-values__mat", {
+                  materialName: "material",
+                  color: '#CEC4E3',
+                  roughness: '0.5',
+                  metalness: '0.3',
+                  opacity: '1',
+               })              
+            });
+            panel_btn_escena_3.addEventListener('mouseleave', function () {
+                panel_btn_escena_3.setAttribute('material-values', 
+                {materialName: 'mat_selector_001',  color: '#608587', opacity: 0.5} 
+                )
+            });
+            panel_btn_escena_4.addEventListener('fusing', function () {
+                panel_btn_escena_4.setAttribute('material-values', 
+                   {materialName: 'mat_selector_001', color: '#90C7C9', opacity: 0.7} 
+                );
+                TorusKnot.setAttribute('material-values', 
+                   {materialName: 'mat_TorusKnot', color: '#E7D685'} 
+                );
+                caja.setAttribute('material-values', 
+                   {materialName: 'mat_cubo', color: '#9F84E7'} 
+                );
+                muroentorno.setAttribute('material-values', 
+                   {materialName: 'Material', color: 'orange'} 
+                );
+                suelo.setAttribute('material-values', 
+                   {materialName: 'mat_suelo', color: '#65646E'} 
+                );
+                txtNudo.setAttribute('visible', false);
+                txtObjeto.setAttribute('visible', false);
+                panelvestuario.setAttribute("material-values__vestuario", {
+                  materialName: "matvestuario",                  
+                  map: "./assets/vestuario/Jersey-azul.png",
+                  roughness: 1,
+                  metalness: 0,
+                  opacity: 0.99,
+               });
+               esfera.setAttribute("material-values__mat", {
+                  materialName: "material",
+                  color: '#e84aa6',
+                  roughness: '0.3',
+                  metalness: '0.5',
+                  opacity: '0.4',
+               });
+               luz_focal_1.setAttribute('visible', true); 
+               luz_focal_2.setAttribute('visible', false);                 
+            });
+            panel_btn_escena_4.addEventListener('mouseleave', function () {
+                panel_btn_escena_4.setAttribute('material-values', 
+                {materialName: 'mat_selector_001',  color: '#608587', opacity: 0.5} 
+                )
+            });
+            panel_btn_escena_5.addEventListener('fusing', function () {
+                panel_btn_escena_5.setAttribute('material-values', 
+                   {materialName: 'mat_selector_001', color: '#90C7C9', opacity: 0.7} 
+                );
+                suelo.setAttribute('material-values', 
+                   {materialName: 'mat_suelo', color: '#96A0B7'} 
+                );
+                TorusKnot.setAttribute('material-values', 
+                   {materialName: 'mat_TorusKnot', color: '#E7D685'} 
+                );
+                muroentorno.setAttribute('material-values', 
+                   {materialName: 'Material', color: 'red'} 
+                );
+                mona.setAttribute('material-values', 
+                   {materialName: 'mat_Suzanne', color: '#DCA3E7'} 
+                );
+                caja.setAttribute('material-values', 
+                   {materialName: 'mat_cubo', color: '#AFE7E5'} 
+                );
+                txtNudo.setAttribute('visible', false);
+                txtObjeto.setAttribute('visible', false); 
+                panelvestuario.setAttribute("material-values__vestuario", {
+                  materialName: "matvestuario",                  
+                  map: "./assets/vestuario/polo_verde.png",
+                  roughness: 1,
+                  metalness: 0,
+                  opacity: 0.99,
+               }); 
+               esfera.setAttribute("material-values__mat", {
+                  materialName: "material",
+                  color: '#CEC4E3',
+                  roughness: '0.5',
+                  metalness: '0.2',
+                  opacity: '1',
+               });
+               luz_focal_1.setAttribute('visible', false); 
+               luz_focal_2.setAttribute('visible', true);                        
+            });
+            panel_btn_escena_5.addEventListener('mouseleave', function () {
+                panel_btn_escena_5.setAttribute('material-values', 
+                {materialName: 'mat_selector_001',  color: '#608587', opacity: 0.5} 
+                )
+            });
+
+            iconplay.addEventListener('fusing', function () {
+             espaciovideo.play();
+            });
+            iconpause.addEventListener('fusing', function () {
+             espaciovideo.pause();
+            });
+            iconstop.addEventListener('fusing', function () {
+             espaciovideo.pause();
+             espaciovideo.currentTime = 0;
+            });
+        </script>
+    </body>
+</html>
+
+
+
+btn_plastico.addEventListener("mouseenter", function () {
+  dum.setAttribute("material-values__plas", {
+    materialName: "mat_plastico_base",
+    color: "#F4F79C",
+    map: "https://cdn.glitch.global/6be530c7-a47d-44a4-9812-663ddd7682f2/transparente.png?v=1701266547554",
+    roughness: 0.4,
+    metalness: 0.3,
+    opacity: 1,
+  });
+});
+
+
+
+<a-entity id="particulas" effekseer="src: ./media/estrellas.efkpkg; dynamic: true; loop: true" position="4.58225 1 -8.13232"></a-entity>
