@@ -121,7 +121,7 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body onload="init();">
-        <a-scene   shadow="type: pcfsoft; autoUpdate: true;" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150">
+        <a-scene   shadow="type: pcfsoft; autoUpdate: false; enabled: false" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150">
             <!-- Assets -->
             <a-assets>
 				<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
@@ -295,7 +295,7 @@
                             position="0 0 -1.2"
                             geometry="primitive: circle; radius: 0.01;"
                             material="color: cyan; shader: flat; opacity: 0.8"
-                            raycaster = "objects: .clickable; far: 25">
+                            raycaster = "objects: .clickable; far: 25; interval: 0">
                         </a-entity>                        
                 </a-entity>
                     
