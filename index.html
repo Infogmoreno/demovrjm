@@ -287,15 +287,15 @@
                 checkpoint-controls="mode: teleport"
                 wasd-controls="acceleration:10">
                 <a-entity id="cam" 
-                    camera="fov:50; near: 0.001" 
+                    camera="fov:50" 
                     position="0 1.7000000476837158 0" 
                     look-controls="pointerLockEnabled: true"
                     wasd-controls-enabled="false">
                         <a-entity id="cursor" class="clickable" cursor="fuse: true; fuseTimeout: 100; rayOrigin: entity"  
-                            position="0 0 -1.5"
-                            geometry="primitive: circle; radius: 0.006;"
-                            material="color: cyan; shader: flat; opacity: 0.7"
-                            raycaster = "objects: .clickable; far: 18">
+                            position="0 0 -1.2"
+                            geometry="primitive: circle; radius: 0.01;"
+                            material="color: cyan; shader: flat; opacity: 0.8"
+                            raycaster = "objects: .clickable; far: 25">
                         </a-entity>                        
                 </a-entity>
                     
