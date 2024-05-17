@@ -121,7 +121,7 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body onload="init();">
-        <a-scene   shadow="type: pcfsoft; autoUpdate: true;" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150" effekseer="wasmPath: https://cdn.jsdelivr.net/gh/mrxz/effekseer-sample-effects/effekseer-build/effekseer.wasm" webxr="requiredFeatures: hit-test,local-floor">
+        <a-scene   shadow="type: pcfsoft; autoUpdate: true;" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150">
             <!-- Assets -->
             <a-assets>
 				<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
@@ -212,7 +212,7 @@
          </a-entity>
 
          
-         <a-entity id="fuegosart" effekseer="src: #fuegosartificiales; dynamic: true; loop: true" position="0.S 1 -18"></a-entity>
+         
         
          
 
