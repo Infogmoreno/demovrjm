@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-
+    <!-- Generated automatically by AFRAME Exporter for Blender - https://silverslade.itch.io/a-frame-blender-exporter -->
+    <!-- MIT License: https://github.com/silverslade/aframe_blender_exporter/blob/master/LICENSE -->
     <head>
         <title>WebXR Application</title>
         <link rel="icon" type="image/png" href="favicon.ico"/>
@@ -112,12 +113,15 @@
               });
             },
           });
-   </script>
+
+              
+
+        </script>
         
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body onload="init();">
-        <a-scene   shadow="type: pcfsoft; autoUpdate: false; enabled: false" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150">
+        <a-scene   shadow="type: pcfsoft; autoUpdate: false; enabled: false" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 150" xr-mode-ui="cardboardModeEnabled: true; enterVREnabled: true; XRMode: vr">
             <!-- Assets -->
             <a-assets>
 				<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
@@ -154,6 +158,7 @@
                 <video id="espacio" src="./media/Cabecera_JM.mp4" loop ></video>
                
                 <a-asset-item id="fuegosartificiales" src="./media/fuegosartificiales.efkpkg" response-type="arraybuffer"></a-asset-item>
+                
                 
             </a-assets>
 
@@ -205,6 +210,11 @@
             <a-image id="icon_stop" class="clickable" src="#stop_ico" position="0 0 0" width="0.2" height="0.2" event-set__playover="_event: fusing; src: #stop_over" event-set__playout="_event: mouseleave; src: #stop_ico"></a-image>
             
          </a-entity>
+
+         
+         
+        
+         
 
          <!--localizadores teletransporte-->
 
@@ -537,8 +547,17 @@
 
 
 
+btn_plastico.addEventListener("mouseenter", function () {
+  dum.setAttribute("material-values__plas", {
+    materialName: "mat_plastico_base",
+    color: "#F4F79C",
+    map: "https://cdn.glitch.global/6be530c7-a47d-44a4-9812-663ddd7682f2/transparente.png?v=1701266547554",
+    roughness: 0.4,
+    metalness: 0.3,
+    opacity: 1,
+  });
+});
 
 
 
-
-
+<a-entity id="particulas" effekseer="src: ./media/estrellas.efkpkg; dynamic: true; loop: true" position="4.58225 1 -8.13232"></a-entity>
