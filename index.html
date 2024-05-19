@@ -9,7 +9,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+        <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
         <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
         <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
@@ -155,7 +155,7 @@
                 <img id="stop_over"       src="./media/stop_over.png">
                 <img id="panel_1"       src="./media/Panel_1_cont.png">
                 <img id="panel_2"       src="./media/Panel_2_cont.png">
-                <video id="espacio" src="./media/Cabecera_JM.mp4" autoplay crossorigin="anonymous"></video>
+                <video id="espacio" src="./media/Cabecera_JM.mp4" loop  preload="auto" crossorigin="anonymous"></video>
                
                 <a-asset-item id="fuegosartificiales" src="./media/fuegosartificiales.efkpkg" response-type="arraybuffer"></a-asset-item>
                 
@@ -253,9 +253,9 @@
         
         radius="0.3"
         height="0.01"
-        position="-4.98 0.02 -5.887"       
+        position="-5.7 0.02 -6.75"       
         material="shader: flat; color: #e7e6ea; opacity:0.2"
-        blink-teleportation="pos: -4.98 0.02 -5.887"
+        blink-teleportation="pos: -5.7 0.02 -6.75"
         
       ></a-cylinder>
       <a-cylinder
@@ -545,19 +545,3 @@
     </body>
 </html>
 
-
-
-btn_plastico.addEventListener("mouseenter", function () {
-  dum.setAttribute("material-values__plas", {
-    materialName: "mat_plastico_base",
-    color: "#F4F79C",
-    map: "https://cdn.glitch.global/6be530c7-a47d-44a4-9812-663ddd7682f2/transparente.png?v=1701266547554",
-    roughness: 0.4,
-    metalness: 0.3,
-    opacity: 1,
-  });
-});
-
-
-
-<a-entity id="particulas" effekseer="src: ./media/estrellas.efkpkg; dynamic: true; loop: true" position="4.58225 1 -8.13232"></a-entity>
