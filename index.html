@@ -123,12 +123,12 @@
         <a-scene   shadow="type: pcfsoft; autoUpdate: false; enabled: false" renderer="antialias: true; colorManagement: true; physicallyCorrectLights: false;" reflection="directLight: #direction" fog="color: #e5e3f2; density: 0.01; near: 250">
             <!-- Assets -->
             <a-assets>
-				<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
-				<a-asset-item id="Cube" src="./assets/Cube.gltf"></a-asset-item>
-				<a-asset-item id="Object" src="./assets/Object.gltf"></a-asset-item>
-				<a-asset-item id="Plane" src="./assets/Plane.gltf"></a-asset-item>
-				<a-asset-item id="TorusKnot" src="./assets/TorusKnot.gltf"></a-asset-item>
-            <a-asset-item id="bola" src="./assets/ATest.glb" crossorigin="anonymous"></a-asset-item>
+	<a-asset-item id="BezierCurve" src="./assets/BezierCurve.gltf"></a-asset-item>
+	<a-asset-item id="Cube" src="./assets/Cube.gltf"></a-asset-item>
+	<a-asset-item id="Object" src="./assets/Object.gltf"></a-asset-item>
+	<a-asset-item id="Plane" src="./assets/Plane.gltf"></a-asset-item>
+	<a-asset-item id="TorusKnot" src="./assets/TorusKnot.gltf"></a-asset-item>
+            
         <a-asset-item id="txtNudo" src="./assets/Txt_Nudo_toral.glb"></a-asset-item>
         <a-asset-item id="txtObject" src="./assets/Txt_Suzanne.glb"></a-asset-item>
         <a-asset-item id="panelcontvest" src="./assets/Panel_contenedor_vestuario.glb"></a-asset-item>
@@ -163,13 +163,13 @@
 
             <!-- Elementos en escena -->
             
-			<a-entity id="muroentorno" class="no-clickable" gltf-model="#BezierCurve" scale="1 1 1" position="0 0 0" visible="true" shadow="cast: true" material-values="materialName: Material; color: red" ></a-entity>
-			<a-entity id="Caja" class="clickable" gltf-model="#Cube" scale="0.8 0.8 0.8" position="-3.9697768688201904 1.1697001457214355 -17.826059341430664" visible="true" shadow="cast: true" 
+	    <a-entity id="muroentorno" class="no-clickable" gltf-model="#BezierCurve" scale="1 1 1" position="0 0 0" visible="true" shadow="cast: true" material-values="materialName: Material; color: red" ></a-entity>
+	    <a-entity id="Caja" class="clickable" gltf-model="#Cube" scale="0.8 0.8 0.8" position="-3.9697768688201904 1.1697001457214355 -17.826059341430664" visible="true" shadow="cast: true" 
                                 animation="property: rotation; resumeEvents: fusing; pauseEvents: mouseleave; from: 0 0 0; to: 0 -360 0; dur: 20000; dir: normal; loop: true; easing: linear"></a-entity>
-			<a-entity id="Mona" gltf-model="#Object" scale="1 1 1" position="1 0.8 -9.6" visible="true" shadow="cast: true"  animation__rot= "property: rotation; from: 0 0 0; to: 0 360 0; dur: 20000; dir: normal; loop: true;  easing: linear " animation__pos="property: position; from: 1 0.95 -9.6; to: 1 0.78 -9.6; dur: 5000; loop: true; dir: alternate; easing: easeInOutQuad;"></a-entity>
-			<a-entity id="Suelo" gltf-model="#Plane" scale="1 1 1" position="0.0 0.0 -12.0" visible="true" shadow="cast: true" material-values="materialName: mat_suelo; color:#65646E" ground></a-entity>
-			<a-entity id="TorusKnot1" gltf-model="#TorusKnot" scale="0.8 0.8 0.8" position="-1 1.0063267946243286 -12.671764373779297" visible="true" shadow="cast: true"  animation= "property: rotation; from: 0 0 0; to: 0 -360 0; dur: 15000; loop: true; dir: normal; easing: linear" ></a-entity>
-         <a-entity id="esfera" gltf-model="#bola" position="-2 0 -8" scale="0.5 0.5 0.5" animation-mixer="clip: *" shadow="cast: true" material-values__mat="materialName:material"></a-entity>   
+	    <a-entity id="Mona" gltf-model="#Object" scale="1 1 1" position="1 0.8 -9.6" visible="true" shadow="cast: true"  animation__rot= "property: rotation; from: 0 0 0; to: 0 360 0; dur: 20000; dir: normal; loop: true;  easing: linear " animation__pos="property: position; from: 1 0.95 -9.6; to: 1 0.78 -9.6; dur: 5000; loop: true; dir: alternate; easing: easeInOutQuad;"></a-entity>
+	    <a-entity id="Suelo" gltf-model="#Plane" scale="1 1 1" position="0.0 0.0 -12.0" visible="true" shadow="cast: true" material-values="materialName: mat_suelo; color:#65646E" ground></a-entity>
+	    <a-entity id="TorusKnot1" gltf-model="#TorusKnot" scale="0.8 0.8 0.8" position="-1 1.0063267946243286 -12.671764373779297" visible="true" shadow="cast: true"  animation= "property: rotation; from: 0 0 0; to: 0 -360 0; dur: 15000; loop: true; dir: normal; easing: linear" ></a-entity>
+           
          
          <a-entity id="grupo_panel_pos"
                        position="-2.2 0 0">                      
