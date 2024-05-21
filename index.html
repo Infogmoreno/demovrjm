@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
-    <!-- Generated automatically by AFRAME Exporter for Blender - https://silverslade.itch.io/a-frame-blender-exporter -->
-    <!-- MIT License: https://github.com/silverslade/aframe_blender_exporter/blob/master/LICENSE -->
+    
     <head>
         <title>WebXR Application</title>
         <link rel="icon" type="image/png" href="favicon.ico"/>
@@ -281,25 +280,18 @@
 
             <!-- Cámara cursor -->
 
-            <a-entity id="camRig" 
-                position="-1.5 -0.2 -2" 
-                movement-controls="controls: checkpoint"
-                checkpoint-controls="mode: teleport"
-                wasd-controls="acceleration:10">
-                <a-entity id="cam" 
-                    camera="fov:40" 
-                    position="0 1.7000000476837158 0" 
-                    look-controls="pointerLockEnabled: true"
-                    wasd-controls-enabled="false">
-                        <a-entity id="cursor" class="clickable" cursor="fuse: true; fuseTimeout: 100; rayOrigin: entity"  
-                            position="0 0 -1"
-                            geometry="primitive: circle; radius: 0.005;"
-                            material="color: cyan; shader: flat"
-                            raycaster = "objects: .clickable; far: 25; interval: 0">
-                        </a-entity>                        
-                </a-entity>
-                    
-            </a-entity>
+            <a-entity id="camRig" position="0 0 0">
+               <!-- CAMERA -->
+               <a-camera id="cam" wasd-controls-enabled="false">
+                 <a-entity
+                   id="cursor"
+                   cursor="fuse: true; fuseTimeout: 500"
+                   position="0 0 -1"
+                   geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"
+                   material="color: cyan; shader: flat"
+                   raycaster="objects: .clickable"
+                 >
+                 </a-entity>
 
             <!-- Luces / iluminación -->
             
@@ -544,4 +536,3 @@
         </script>
     </body>
 </html>
-
